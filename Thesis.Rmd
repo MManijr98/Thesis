@@ -1,0 +1,163 @@
+---
+title: "Thesis"
+author: "Michael Manigault"
+date: "2/16/2022"
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+
+```{r}
+install.packages("descr")
+install.packages("tidyr")
+install.packages("survey")
+install.packages("Hmisc")
+install.packages("corrplot")
+install.packages("magrittr")
+install.packages("dplyr")    
+```
+
+
+
+
+
+```{r}
+rm(list=ls())
+gc()
+directory <-"C:/Users/mmani/Downloads/"
+setwd(directory)
+```
+
+
+```{r}
+load("C:/Users/mmani/Downloads/NHIS_2004-2020_Maginault.Rdata")
+dataset <- (`NHIS_2004-2020_Maginault`)
+View(dataset)
+```
+```{r}
+library(magrittr)
+library(dplyr)
+
+aworthless <- aworthless %>%
+  mutate
+      aworthless = case_when(
+      resp_worthless => 0 & resp_worthless <= 4 ~ "No moderate or severe PD"
+      resp_worthless => 5 & resp_worthless <= 12 ~ "Moderate PD"
+      resp_worthless => 13 ~ "Severe PD")
+```
+```{r}
+dataset$K6SUM <- dataset$ahopeless + dataset$anervous + dataset$aworthless + dataset$arestless + dataset$asad + dataset$aeffort
+summary(dataset$K6SUM)
+```
+```{r}
+dataset$K6 <- cut(dataset$K6SUM, breaks =  c(-1, 4, 12, 25))
+dataset$K6 <- factor(dataset$K6, ordered = T, labels = c("Low","Moderate","Serious"))
+summary(dataset$K6)
+```
+
+```{r}
+table(dataset$K6, dataset$computer_math_occ)
+```
+
+```{r}
+table(dataset$ahopeless, dataset$computer_math_occ)
+```
+```{r}
+table(dataset$anervous, dataset$computer_math_occ)
+```
+```{r}
+table(dataset$aworthless, dataset$computer_math_occ)
+```
+```{r}
+table(dataset$arestless,dataset$computer_math_occ)
+```
+```{r}
+table(dataset$asad,dataset$computer_math_occ)
+```
+
+```{r}
+table(dataset$aeffort,dataset$computer_math_occ)
+```
+```{r}
+table(dataset$atired,dataset$computer_math_occ)
+```
+
+```{r}
+table(dataset$K6, dataset$computer_math_occ)
+```
+
+
+```{r}
+table(dataset$computer_math_occ)
+```
+
+```{r}
+table(dataset$sex)
+```
+
+```{r}
+table(dataset$sexorien)
+```
+
+```{r}
+table(dataset$citizen)
+```
+
+```{r}
+chisq.test(dataset$computer_math_occ, dataset$ahopeless, correct = FALSE)
+```
+```{r}
+chisq.test(dataset$computer_math_occ, dataset$anervous, correct = FALSE)
+```
+```{r}
+chisq.test(dataset$computer_math_occ, dataset$arestless, correct = FALSE)
+```
+
+```{r}
+chisq.test(dataset$computer_math_occ, dataset$aworthless, correct = FALSE)
+```
+
+```{r}
+chisq.test(dataset$computer_math_occ, dataset$aeffort, correct = FALSE)
+```
+
+```{r}
+reg.1 <- lm(computer_math_occ ~ age, data = dataset)
+summary(reg.1)
+```
+```{r}
+```
+
+
+```{r}
+```
+
+```{r}
+reg.2 <- lm(computer_math_occ ~ sex, data = dataset)
+summary(reg.2)
+```
+
+```{r}
+reg.3 <- lm(computer_math_occ ~ sexorien, data = dataset)
+summary(reg.3)
+```
+
+```{r}
+reg.5 <- lm(computer_math_occ ~ ahopeless + aeffort + aworthless + anervous + arestless + asad, data = dataset)
+summary(reg.5)
+```
+
+```{r}
+reg.6 <- lm(age ~ K6SUM, data = dataset)
+summary(reg.6)
+```
+```{r}
+reg.7 <- lm(sex ~ K6SUM, data = dataset)
+summary(reg.7)
+```
+```{r}
+reg.8 <- lm(sexorien ~ K6SUM, data = dataset)
+summary(reg.8)
+```
+
